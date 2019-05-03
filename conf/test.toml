@@ -1,0 +1,32 @@
+[Kubeconf]
+# etcd docker 与kubelet等数据存储路径,默认值 /data。
+DataDir = "/data"
+# Calico MTU值, 默认1440 （阿里云1440|京东云1430）
+MTU = "1430"
+# prometheus 监控grafana管理员admin密码配置,默认值 TestAdmin567
+PrometheusGrafanaPass = "TestAdmin567"
+# 增加节点时要使用token 与证书hash值，部署时不必填写，部署完成后会回写配置文件。
+Token = ""
+CertHash = ""
+
+[Master]
+# k8s master集群地址
+IPS = [ "10.0.0.3","10.0.0.4","10.0.0.5" ]
+
+[Node]
+# K8s Node节点配置，左边是服务器ip地址，右边是节点名称.
+# 右边前缀表示部署的 label属性，会在matchvs脚本里打label到node上
+# matchvs表示引擎，gs表示gameserver服务器
+"10.0.0.3" = "matchvs-180.101.125.83"
+"10.0.0.4" = "matchvs-180.101.123.94"
+"10.0.0.5" = "matchvs-180.101.125.162"
+"10.0.0.6" = "gs-180.101.125.76"
+"10.0.0.7" = "gs-180.101.125.3"
+
+[Ssh]
+# ssh登陆端口，账号密码，请统一一个
+Port = 22
+# 用户名请默认填root
+Username = "root"
+# root密码
+Password = "zw-9898w"

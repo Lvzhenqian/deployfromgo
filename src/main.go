@@ -1,7 +1,9 @@
 package main
 
-func main() {
-	//var SshClient sshtool.Client
-	//SshClient.ConnectFromPasswd()
+import (
+	"deployfromgo/src/sshtool"
+)
 
+func main() {
+	var c sshtool.SSH
 }

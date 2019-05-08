@@ -11,17 +11,10 @@ CertHash = ""
 
 [Master]
 # k8s master集群地址
-IPS = [ "10.0.0.3","10.0.0.4","10.0.0.5" ]
+IPS = [ "10.0.0.3" ]
 
 [Node]
-# K8s Node节点配置，左边是服务器ip地址，右边是节点名称.
-# 右边前缀表示部署的 label属性，会在matchvs脚本里打label到node上
-# matchvs表示引擎，gs表示gameserver服务器
 "10.0.0.3" = "matchvs-180.101.125.83"
-"10.0.0.4" = "matchvs-180.101.123.94"
-"10.0.0.5" = "matchvs-180.101.125.162"
-"10.0.0.6" = "gs-180.101.125.76"
-"10.0.0.7" = "gs-180.101.125.3"
 
 [Ssh]
 # ssh登陆端口，账号密码，请统一一个
@@ -29,4 +22,4 @@ Port = 22
 # 用户名请默认填root
 Username = "root"
 # root密码
-Password = "zw-9898w"
+Password = "hd8832508"

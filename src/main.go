@@ -8,7 +8,7 @@ import (
 func main() {
 	//var c sshtool.SSH
 	var d sshtool.SshClient
-	err := d.PushDir("192.168.3.127","/home/charles/leanote","/root")
+	err := d.GetDir("193.112.47.118","/data/jupyter","d:/")
 	if err != nil {
 		fmt.Println(err)
 	}

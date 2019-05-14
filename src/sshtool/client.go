@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"deployfromgo/src/config"
 	"fmt"
+	"github.com/kr/fs"
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"gopkg.in/cheggaaa/pb.v1"
@@ -23,7 +24,7 @@ type SSH interface {
 	PushFile(ip string ,Src string,Dst string) error
 	GetFile(ip string, Src string,Dst string) error
 	PushDir(ip string, Src string,Dst string) error
-	GetDir(ip string, Src string,Dst string)
+	GetDir(ip string, Src string,Dst string) error
 }
 
 var (
@@ -224,8 +225,73 @@ func (c *SshClient) PushDir(ip string, Src string, Dst string) error {
 	return nil
 }
 
-func (c *SshClient) GetDir(ip string, Src string, Dst string) {
-	panic("implement me")
+func (c *SshClient) GetDir(ip string, Src string, Dst string) error {
+	client,clienterr := ssh.Dial("tcp", fmt.Sprintf("%s:%d",ip,Configs.Ssh.Port), ClientCf)
+	if clienterr != nil {
+		return clienterr
+	}
+	defer client.Close()
+	// new SftpClient
+	sftpClient, err := sftp.NewClient(client)
+	defer sftpClient.Close()
+	if err != nil {
+		return err
+	}
+	walker :=sftpClient.Walk(Src)
+	//获取远程目录的大小
+	size := func(c *sftp.Client) int64 {
+		var ret int64
+		TotalWalk := c.Walk(Src)
+		for TotalWalk.Step(){
+			stat := TotalWalk.Stat()
+			if !stat.IsDir(){
+				ret += stat.Size()
+			}
+		}
+		return ret
+	}(sftpClient)
+	bar := pb.New64(size).SetUnits(pb.U_BYTES)
+	bar.ShowSpeed = true
+	bar.ShowTimeLeft=true
+	bar.ShowPercent=true
+	bar.Prefix(path.Base(Src))
+	bar.Start()
+	defer bar.Finish()
+	//同步远程目录到本地
+	var wg sync.WaitGroup
+	base := path.Dir(Src)
+	wg.Add(1)
+	go func(w *fs.Walker,c *sftp.Client,g *sync.WaitGroup,b *pb.ProgressBar) {
+		for w.Step(){
+			pdst := strings.TrimPrefix(w.Path(),base)
+			p := path.Join(Dst,pdst)
+			stats := w.Stat()
+			switch {
+			case walker.Err() != nil:
+				panic(walker.Err())
+			case stats.IsDir():
+
+				os.Mkdir(p,0)
+			default:
+				files,_ :=c.Open(w.Path())
+				defer files.Close()
+				ds,errs := os.Create(p)
+				if errs != nil{
+					panic(errs)
+				}
+				defer ds.Close()
+				//io.Copy(ds,file)
+				i,e:= io.Copy(ds,files)
+				if e != nil {
+					fmt.Println(e)
+				}
+				b.Add64(i)
+			}
+		}
+		g.Done()
+	}(walker,sftpClient,&wg,bar)
+	wg.Wait()
+	return nil
 }
 
 

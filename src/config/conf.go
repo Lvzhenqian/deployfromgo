@@ -7,10 +7,12 @@ import (
 	"sync"
 )
 
-var (
+const (
 	Perfix string = "k8s-"
 	LoadBalancer string = "127.0.0.1:5443"
 )
+
+var Configmaps *TomlConfig
 
 type Master struct {
 	IPS []string
@@ -68,4 +70,12 @@ func (conf *TomlConfig) Read(config string) error  {
 		}
 	})
 	return nil
+}
+
+func init() {
+	Configmaps = new(TomlConfig)
+	err := Configmaps.Read("../../conf/test.toml")
+	if err != nil {
+		panic(err)
+	}
 }

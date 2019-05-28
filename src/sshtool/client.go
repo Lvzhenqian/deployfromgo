@@ -3,6 +3,7 @@ package sshtool
 import (
 	"bufio"
 	"deployfromgo/src/config"
+	"deployfromgo/src/logger"
 	"fmt"
 	"github.com/kr/fs"
 	"github.com/pkg/sftp"
@@ -37,11 +38,7 @@ type SshClient struct{
 }
 
 func init() {
-	Configs = new(config.TomlConfig)
-	err := Configs.Read("../conf/test.toml")
-	if err != nil {
-		panic(err)
-	}
+	Configs = config.Configmaps
 	auth := make([]ssh.AuthMethod,0)
 	auth = append(auth,ssh.Password(Configs.Ssh.Password))
 	ClientCf = &ssh.ClientConfig{
@@ -78,8 +75,9 @@ func (c *SshClient) ExecCommand(ip string, cmd string) error {
 	go func() {
 		for scanner.Scan() {
 			//n,e:=Out.Write(scanner.Bytes())
-			//fmt.Println(n,e)
-			fmt.Fprintf(&Out,"%s\n",scanner.Text())
+			s := fmt.Sprintf("%s: %s\n",ip,scanner.Text())
+			logger.Debug(s)
+			fmt.Fprintf(&Out,"%s\n",s)
 		}
 	}()
 
@@ -92,6 +90,7 @@ func (c *SshClient) ExecCommand(ip string, cmd string) error {
 }
 
 func (c *SshClient) PushFile(ip string, Src string, Dst string) error {
+	logger.Debug(fmt.Sprintf("%s: %s-->%s",ip,Src,Dst))
 	//create connect
 	client,clienterr := ssh.Dial("tcp", fmt.Sprintf("%s:%d",ip,Configs.Ssh.Port), ClientCf)
 	if clienterr != nil {
@@ -130,6 +129,7 @@ func (c *SshClient) PushFile(ip string, Src string, Dst string) error {
 }
 
 func (c *SshClient) GetFile(ip string, Src string, Dst string) error {
+	logger.Debug(fmt.Sprintf("%s: %s-->%s",ip,Src,Dst))
 	// create SshClient
 	client,clienterr := ssh.Dial("tcp", fmt.Sprintf("%s:%d",ip,Configs.Ssh.Port), ClientCf)
 	if clienterr != nil {
@@ -172,6 +172,7 @@ func (c *SshClient) GetFile(ip string, Src string, Dst string) error {
 }
 
 func (c *SshClient) PushDir(ip string, Src string, Dst string) error {
+	logger.Debug(fmt.Sprintf("%s: %s-->%s",ip,Src,Dst))
 	// create SshClient
 	client,clienterr := ssh.Dial("tcp", fmt.Sprintf("%s:%d",ip,Configs.Ssh.Port), ClientCf)
 	if clienterr != nil {
@@ -226,6 +227,7 @@ func (c *SshClient) PushDir(ip string, Src string, Dst string) error {
 }
 
 func (c *SshClient) GetDir(ip string, Src string, Dst string) error {
+	logger.Debug(fmt.Sprintf("%s: %s-->%s",ip,Src,Dst))
 	client,clienterr := ssh.Dial("tcp", fmt.Sprintf("%s:%d",ip,Configs.Ssh.Port), ClientCf)
 	if clienterr != nil {
 		return clienterr

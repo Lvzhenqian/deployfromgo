@@ -49,7 +49,7 @@ type Kubeconf struct {
 
 func (conf *TomlConfig) Write(config string) error {
 	file,_ := filepath.Abs(config)
-	f,err := os.Open(file)
+	f,err := os.Create(file)
 	defer f.Close()
 	if err != nil {
 		return err

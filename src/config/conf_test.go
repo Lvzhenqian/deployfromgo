@@ -16,3 +16,11 @@ func assertType(t *testing.T,a interface{},b string) {
 func TestTomlConfig_Read(t *testing.T) {
 	assertType(t,Configmaps.Ssh.Port,"int")
 }
+
+func TestTomlConfig_Write(t *testing.T) {
+	Configmaps.Ssh.Port = 3879
+	err := Configmaps.Write("./1.toml")
+	if err !=nil{
+		t.Error(err)
+	}
+}

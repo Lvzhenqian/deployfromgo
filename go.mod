@@ -1,17 +1,19 @@
 module deployfromgo
 
-go 1.12
+go 1.13
 
 require (
 	github.com/BurntSushi/toml v0.3.1
-	github.com/fatih/color v1.7.0 // indirect
-	github.com/kr/fs v0.1.0
-	github.com/mattn/go-colorable v0.1.1 // indirect
-	github.com/mattn/go-runewidth v0.0.4 // indirect
+	github.com/Lvzhenqian/sshtool v0.1.3
+	github.com/Microsoft/go-winio v0.4.14 // indirect
+	github.com/docker/distribution v2.7.1+incompatible // indirect
+	github.com/docker/docker v1.13.1 // indirect
+	github.com/docker/go-connections v0.4.0 // indirect
+	github.com/docker/go-units v0.4.0 // indirect
+	github.com/mattn/go-runewidth v0.0.7 // indirect
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
-	github.com/pkg/errors v0.8.1 // indirect
-	github.com/pkg/sftp v1.10.0
-	github.com/stretchr/testify v1.3.0 // indirect
-	golang.org/x/crypto v0.0.0-20190426145343-a29dc8fdc734
-	gopkg.in/cheggaaa/pb.v1 v1.0.28
+	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
+	golang.org/x/crypto v0.0.0-20200108215511-5d647ca15757 // indirect
+	golang.org/x/sys v0.0.0-20200107162124-548cf772de50 // indirect
+	gopkg.in/yaml.v2 v2.2.7 // indirect
 )

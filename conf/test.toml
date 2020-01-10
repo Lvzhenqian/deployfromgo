@@ -1,20 +1,13 @@
 [Kubeconf]
-# etcd docker 与kubelet等数据存储路径,默认值 /data。
-DataDir = "/data"
-# Calico MTU值, 默认1440 （阿里云1440|京东云1430）
-MTU = "1430"
-# prometheus 监控grafana管理员admin密码配置,默认值 TestAdmin567
-PrometheusGrafanaPass = "TestAdmin567"
-# 增加节点时要使用token 与证书hash值，部署时不必填写，部署完成后会回写配置文件。
+Version = "1.17.0"
+# 增加节点时要使用token 与证书hash值，部署时不必填写，部署完成后会回写配置文件。dashboard管理员token回写
 Token = ""
 CertHash = ""
-
-[Master]
-# k8s master集群地址
-IPS = [ "10.0.0.3" ]
+DashboardToken = ""
 
 [Node]
-"10.0.0.3" = "matchvs-180.101.125.83"
+# 左边为节点hostname ，右边为对应的节点ip，默认添加上 `master` 关键字的会部署master的资源,如果都没添加，则从node随机挑3个节点。
+"kubeadm" = "192.168.1.230"
 
 [Ssh]
 # ssh登陆端口，账号密码，请统一一个
@@ -22,4 +15,5 @@ Port = 22
 # 用户名请默认填root
 Username = "root"
 # root密码
-Password = ""
+Password = "vagrant"
+Pkeypass = ""
